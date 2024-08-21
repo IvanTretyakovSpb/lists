@@ -225,6 +225,66 @@ public class MyLinkedList<T> implements Iterable<T> {
         return false;
     }
 
+    /**
+     * Возвращает первый элемент списка
+     *
+     * @return первый элемент списка
+     * @throws NoSuchElementException если список пустой (не содержит элементов)
+     */
+    public T getFirst() {
+        final Node<T> h = head;
+        if (h == null)
+            throw new NoSuchElementException();
+        return h.data;
+    }
+
+    /**
+     * Возвращает последний элемент списка
+     *
+     * @return последний элемент списка
+     * @throws NoSuchElementException если список пустой (не содержит элементов)
+     */
+    public T getLast() {
+        final Node<T> t = tail;
+        if (t == null)
+            throw new NoSuchElementException();
+        return t.data;
+    }
+
+    /**
+     * Возвращает элемент из указанной позиции в списке
+     *
+     * @param index индекс возвращаемого элемента
+     * @return элемент списка, расположенный на указанной позиции
+     * @throws IndexOutOfBoundsException если указанный индекс < 0 или >= size (размер списка)
+     */
+    public T get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(
+                    String.format("Incorrect index: %d, LinkedList size: %d", index, size));
+        }
+        return nodeByIndex(index).data;
+    }
+
+    /**
+     * Служебный метод для получения ноды по заданному индексу
+     *
+     * @param index индекс искомой ноды
+     * @return нода, расположенная по указанному индексу
+     */
+    private Node<T> nodeByIndex(int index) {
+        if (index < (size >> 1)) {
+            Node<T> x = head;
+            for (int i = 0; i < index; i++)
+                x = x.next;
+            return x;
+        } else {
+            Node<T> x = tail;
+            for (int i = size - 1; i > index; i--)
+                x = x.prev;
+            return x;
+        }
+    }
 
     /**
      * Возвращает индекс элемента в списке
@@ -250,6 +310,49 @@ public class MyLinkedList<T> implements Iterable<T> {
             }
         }
         return -1;
+    }
+
+    /**
+     * Заменяет элемент списка в указанной позиции на новый элемент
+     *
+     * @param index   индекс элемента для замены
+     * @param element новое значение элемента в указанной позиции
+     * @return элемент списка, ранее расположенный в указанной позиции
+     * @throws IndexOutOfBoundsException если указанный индекс < 0 или >= size (размер списка)
+     */
+    public T set(int index, T element) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(
+                    String.format("Incorrect index: %d, LinkedList size: %d", index, size));
+        }
+        Node<T> x = nodeByIndex(index);
+        T oldValue = x.data;
+        x.data = element;
+        return oldValue;
+    }
+
+    /**
+     * Возвращает новый список из части элементов указанного списка
+     * с fromIndex (включительно) до toIndex (не включается)
+     *
+     * @param fromIndex начальный индекс подсписка
+     * @param toIndex   индекс, до которого будет создаваться подсписок
+     * @return список, содержащий элементы первоначального списка в указанном интервале
+     * @throws IndexOutOfBoundsException если указаны некорректные индексы
+     *                                   (fromIndex < 0 || toIndex > size || fromIndex > toIndex)
+     * @throws IllegalArgumentException  если индексы указаны в неверном порядке (fromIndex > toIndex)
+     */
+    public MyLinkedList<T> subList(int fromIndex, int toIndex) {
+        if (fromIndex < 0 || toIndex > size) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (fromIndex > toIndex) {
+            throw new IllegalArgumentException();
+        }
+        MyLinkedList<T> sublist = new MyLinkedList<>();
+        for (int i = fromIndex; i < toIndex; i++)
+            sublist.add(this.get(i));
+        return sublist;
     }
 
     /**
