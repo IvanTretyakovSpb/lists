@@ -402,13 +402,13 @@ public class MyLinkedList<T> implements Iterable<T> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("[ ");
+        sb.append("MyLinkedList [");
         Node<T> trav = head;
         while (trav != null) {
             sb.append(trav.data).append(", ");
             trav = trav.next;
         }
-        sb.append(" ]");
-        return sb.toString();
+        String result = sb.substring(0, sb.length() - 2);
+        return result + "]";
     }
 }
